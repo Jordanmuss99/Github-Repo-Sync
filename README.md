@@ -1,6 +1,6 @@
 # GitHub Repository Synchronization Tool
 
-This Python program allows you to synchronize a local directory with a GitHub repository. It provides a graphical user interface (GUI) for easy configuration and management of the synchronization process.
+This Python program allows you to synchronize a local directory with a GitHub repository. It provides a graphical user interface (GUI) for easy configuration and management of the synchronization process. This program is meant to be used as a way to keep a repo automatically updated on a machine or server without manually hitting pull. 
 
 ## Features
 
