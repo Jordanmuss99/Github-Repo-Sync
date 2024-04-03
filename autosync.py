@@ -202,7 +202,7 @@ def sync_repo(gui):
 
     try:
         if not os.path.exists(local_path):
-            gui.display_output(f"Cloning repository to {local_path}...")
+            gui.display_output(f"Cloning repository to {local_path} \nThis can sometimes take a little while...")
             if is_private_repo and access_token:
                 repo_url_with_token = repo_url.replace("https://", f"https://{access_token}@")
                 repo = Repo.clone_from(repo_url_with_token, local_path, branch=branch)
