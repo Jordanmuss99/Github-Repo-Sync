@@ -8,6 +8,7 @@ from flask import Flask, request
 from threading import Thread
 import tkinter as tk
 from tkinter import ttk, scrolledtext, simpledialog, filedialog
+import requests
 global gui
 
 app = Flask(__name__)
@@ -26,6 +27,7 @@ class SyncGUI:
         self.log_file = config.get('settings', 'log_file', fallback='')
         self.is_private_repo = config.getboolean('repository', 'is_private', fallback=False)
         self.access_token = config.get('settings', 'access_token', fallback='')
+        self.flask_thread = None
 
         self.create_widgets()
         self.load_config()
@@ -54,6 +56,30 @@ class SyncGUI:
 
     def run(self):
         self.window.mainloop()
+
+    def toggle_monitoring(self):
+        if self.monitoring_var.get():
+            self.monitoring_button.config(text="Start Monitoring")
+            self.stop_webhook()
+        else:
+            self.monitoring_button.config(text="Stop Monitoring")
+            self.start_webhook()
+        
+        self.monitoring_var.set(not self.monitoring_var.get())
+
+    def start_webhook(self):
+        if self.flask_thread is None or not self.flask_thread.is_alive():
+            self.flask_thread = Thread(target=run_flask_app)
+            self.flask_thread.daemon = True
+            self.flask_thread.start()
+            self.display_output("Webhook started.")
+
+    def stop_webhook(self):
+        if self.flask_thread is not None and self.flask_thread.is_alive():
+            # Send a request to shutdown the Flask app gracefully
+            requests.get("http://localhost:8000/shutdown")
+            self.flask_thread.join(timeout=5)
+            self.display_output("Webhook stopped.")
 
     def create_widgets(self):
         main_frame = ttk.Frame(self.window)
@@ -94,8 +120,10 @@ class SyncGUI:
         # Actions
         actions_frame = ttk.LabelFrame(main_frame, text="Actions")
         actions_frame.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
-
-        ttk.Button(actions_frame, text="Start Monitoring", command=self.start_monitoring).grid(row=0, column=0, padx=5, pady=5)
+        
+        self.monitoring_var = tk.BooleanVar()
+        self.monitoring_button = ttk.Button(actions_frame, text="Start Monitoring", command=self.toggle_monitoring)
+        self.monitoring_button.grid(row=0, column=0, padx=5, pady=5)
         ttk.Button(actions_frame, text="Perform One-Time Synchronization", command=self.sync_repo).grid(row=0, column=1, padx=5, pady=5)
         ttk.Button(actions_frame, text="Display Sync History", command=self.display_sync_history).grid(row=1, column=0, padx=5, pady=5)
         ttk.Button(actions_frame, text="Display Last Synchronization Status", command=self.display_last_sync_status).grid(row=1, column=1, padx=5, pady=5)
@@ -353,17 +381,25 @@ def handle_webhook():
     return "OK"
 
 def run_flask_app():
+    @app.route("/shutdown", methods=["GET"])
+    def shutdown():
+        terminate_func = request.environ.get("werkzeug.server.shutdown")
+        if terminate_func:
+            terminate_func()
+        return "Flask app shutting down..."
+
     app.run(host='0.0.0.0', port=8000)
 
 def main():
     global gui
-    # Start the Flask app in a separate thread
-    flask_thread = Thread(target=run_flask_app)
-    flask_thread.daemon = True
-    flask_thread.start()
-
-    # Create and run the GUI
+    
+    # Create the GUI
     gui = SyncGUI()
+    
+    # Start the webhook
+    gui.start_webhook()
+    
+    # Run the GUI
     gui.run()
 
 if __name__ == "__main__":
