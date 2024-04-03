@@ -48,6 +48,10 @@ class SyncGUI:
         self.access_token_entry.delete(0, tk.END)
         self.access_token_entry.insert(0, self.access_token)
 
+    def save_config(self):
+        self.update_config()
+        self.display_output("Configuration saved.")
+
     def run(self):
         self.window.mainloop()
 
@@ -82,6 +86,10 @@ class SyncGUI:
         ttk.Label(info_frame, text="Access Token:").grid(row=5, column=0, sticky=tk.W)
         self.access_token_entry = ttk.Entry(info_frame, width=50, show="*")
         self.access_token_entry.grid(row=5, column=1, sticky=tk.W)
+
+        # Add the "Save Config" button
+        save_config_button = ttk.Button(info_frame, text="Save Config", command=self.save_config)
+        save_config_button.grid(row=6, column=1, padx=5, pady=5)
 
         # Actions
         actions_frame = ttk.LabelFrame(main_frame, text="Actions")
