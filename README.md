@@ -69,7 +69,7 @@ To set up the webhook integration:
 
 2. Configure your GitHub repository's webhook settings to send push events to the URL: `http://your-public-ip:8000/webhook`.
 
-3. The program will automatically handle the webhook events and synchronize the repository when changes are pushed to the "main" branch.
+3. The program will automatically handle the webhook events and synchronize the repository when changes are pushed to the chosen branch.
 
 ## License
 
