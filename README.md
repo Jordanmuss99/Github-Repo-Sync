@@ -41,12 +41,12 @@ This Python program allows you to synchronize a local directory with a GitHub re
    python autosync.py
    ```
 2. The GUI window will appear. Fill in the repository information:
-- URL: Enter the URL of the GitHub repository.
-- Local Path: Enter the local directory path where the repository will be cloned.
-- Branch: Enter the branch name to synchronize with (default is "main").
-- Log File: Enter the path to the log file for storing synchronization history.
-- Private Repository: Check this box if the repository is private and requires an access token.
-- Access Token: If the repository is private, enter your personal access token.
+   - URL: Enter the URL of the GitHub repository.
+   - Local Path: Enter the local directory path where the repository will be cloned.
+   - Branch: Enter the branch name to synchronize with (default is "main").
+   - Log File: Enter the path to the log file for storing synchronization history.
+   - Private Repository: Check this box if the repository is private and requires an access token.
+   - Access Token: If the repository is private, enter your personal access token.
 
 3. Click the "Start Monitoring" button to begin monitoring the repository for changes. The program will automatically synchronize any changes detected.
 
