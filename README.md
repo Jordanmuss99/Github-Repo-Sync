@@ -61,7 +61,7 @@ Please note that your Access Token is readable and is not encrypted in the confi
 
 ## Webhook Integration
 
-The program includes a Flask web server that listens for webhook events from GitHub. When a push event is received for the "main" branch, the program automatically synchronizes the repository.
+The program includes a Flask web server that listens for webhook events from GitHub. When a push event is received for the chosen branch, the program automatically synchronizes the repository.
 
 To set up the webhook integration:
 
